@@ -22,10 +22,10 @@
             </objects>
             <point key="canvasLocation" x="-742" y="475"/>
         </scene>
-        <!--View Controller-->
+        <!--Setup-->
         <scene sceneID="uMI-9z-as5">
             <objects>
-                <viewController id="fT7-ny-OUY" sceneMemberID="viewController">
+                <viewController id="fT7-ny-OUY" userLabel="Setup" customClass="SetupController" customModule="RunCapture" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="iyt-nz-BG6"/>
                         <viewControllerLayoutGuide type="bottom" id="R11-uo-TaL"/>
@@ -76,10 +76,10 @@
             </objects>
             <point key="canvasLocation" x="-30" y="475"/>
         </scene>
-        <!--View Controller-->
+        <!--Capture-->
         <scene sceneID="bsD-9L-K0O">
             <objects>
-                <viewController id="1KD-h6-u4f" sceneMemberID="viewController">
+                <viewController id="1KD-h6-u4f" userLabel="Capture" customClass="CaptureController" customModule="RunCapture" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Fkg-5B-qo4"/>
                         <viewControllerLayoutGuide type="bottom" id="g9B-35-iGX"/>
@@ -98,10 +98,20 @@
                                             <state key="normal" title="Abort Run">
                                                 <color key="titleColor" red="0.66821416879999995" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             </state>
+                                            <connections>
+                                                <action selector="abortRun:" destination="1KD-h6-u4f" eventType="touchUpInside" id="Mpd-IR-PJh"/>
+                                            </connections>
                                         </button>
+                                        <connections>
+                                            <action selector="abortRun:" destination="1KD-h6-u4f" id="LZj-Sr-NG3"/>
+                                        </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="fFt-6Q-sme"/>
-                                    <barButtonItem title="End Run" id="KK8-rz-Wet"/>
+                                    <barButtonItem title="End Run" id="KK8-rz-Wet">
+                                        <connections>
+                                            <action selector="endRun:" destination="1KD-h6-u4f" id="gHd-zT-975"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="0 miles" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UwM-A7-apv">

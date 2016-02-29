@@ -8,12 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		FB438EAD1C83D075009FA67E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438EAC1C83D075009FA67E /* AppDelegate.swift */; };
-		FB438EAF1C83D075009FA67E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438EAE1C83D075009FA67E /* ViewController.swift */; };
+		FB438EAF1C83D075009FA67E /* SetupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438EAE1C83D075009FA67E /* SetupController.swift */; };
 		FB438EB21C83D075009FA67E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB438EB01C83D075009FA67E /* Main.storyboard */; };
 		FB438EB41C83D075009FA67E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB438EB31C83D075009FA67E /* Assets.xcassets */; };
 		FB438EB71C83D075009FA67E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB438EB51C83D075009FA67E /* LaunchScreen.storyboard */; };
 		FB438EC21C83D075009FA67E /* RunCaptureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438EC11C83D075009FA67E /* RunCaptureTests.swift */; };
 		FB438ECD1C83D075009FA67E /* RunCaptureUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438ECC1C83D075009FA67E /* RunCaptureUITests.swift */; };
+		FB438EDB1C83DAB2009FA67E /* CaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438EDA1C83DAB2009FA67E /* CaptureController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +37,7 @@
 /* Begin PBXFileReference section */
 		FB438EA91C83D075009FA67E /* RunCapture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RunCapture.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB438EAC1C83D075009FA67E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		FB438EAE1C83D075009FA67E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		FB438EAE1C83D075009FA67E /* SetupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupController.swift; sourceTree = "<group>"; };
 		FB438EB11C83D075009FA67E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FB438EB31C83D075009FA67E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB438EB61C83D075009FA67E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -47,6 +48,7 @@
 		FB438EC81C83D075009FA67E /* RunCaptureUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunCaptureUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB438ECC1C83D075009FA67E /* RunCaptureUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunCaptureUITests.swift; sourceTree = "<group>"; };
 		FB438ECE1C83D075009FA67E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB438EDA1C83DAB2009FA67E /* CaptureController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,11 +100,12 @@
 			isa = PBXGroup;
 			children = (
 				FB438EAC1C83D075009FA67E /* AppDelegate.swift */,
-				FB438EAE1C83D075009FA67E /* ViewController.swift */,
+				FB438EAE1C83D075009FA67E /* SetupController.swift */,
 				FB438EB01C83D075009FA67E /* Main.storyboard */,
 				FB438EB31C83D075009FA67E /* Assets.xcassets */,
 				FB438EB51C83D075009FA67E /* LaunchScreen.storyboard */,
 				FB438EB81C83D075009FA67E /* Info.plist */,
+				FB438EDA1C83DAB2009FA67E /* CaptureController.swift */,
 			);
 			path = RunCapture;
 			sourceTree = "<group>";
@@ -256,7 +259,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FB438EAF1C83D075009FA67E /* ViewController.swift in Sources */,
+				FB438EDB1C83DAB2009FA67E /* CaptureController.swift in Sources */,
+				FB438EAF1C83D075009FA67E /* SetupController.swift in Sources */,
 				FB438EAD1C83D075009FA67E /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

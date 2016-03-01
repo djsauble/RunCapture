@@ -30,9 +30,11 @@ class SetupController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if segue.identifier == "toCapture" {
             if let destinationVC = segue.destinationViewController as? CaptureController {
-                url.url = urlTextField.text
-                destinationVC.postURL = url.url
-                url.saveURL()
+                if urlTextField.text?.characters.count > 0 {
+                    url.url = urlTextField.text
+                    destinationVC.postURL = url.url
+                    url.saveURL()
+                }
             }
         }
     }

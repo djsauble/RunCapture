@@ -12,21 +12,24 @@ import CoreLocation
 
 class CaptureController: UIViewController, CLLocationManagerDelegate {
     
+    @IBOutlet weak var distanceLabel: UILabel!
+    
     var locationManager: CLLocationManager!
     var pointsOnRoute: [CLLocation] = []
+    var distance: Double = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         // Set up the location manager
         self.locationManager = CLLocationManager()
         self.locationManager.delegate = self
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-        self.locationManager.distanceFilter = kCLLocationAccuracyBestForNavigation
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.distanceFilter = kCLLocationAccuracyBest
         
-        // Initialize the points array
-        self.pointsOnRoute = []
+        // Clear counters
+        pointsOnRoute = []
+        distance = 0.0
         
         // Check authorization. Request location services.
         if CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedAlways {
@@ -46,8 +49,16 @@ class CaptureController: UIViewController, CLLocationManagerDelegate {
     
     // Record the current location
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // Calculate meters traversed
+        if let last = pointsOnRoute.last {
+            self.distance += last.distanceFromLocation(locations.last!)
+        }
+        
+        // Add the new point to the array
         pointsOnRoute.append(locations.last!)
-        print(locations.last?.description)
+        
+        // Display distance
+        distanceLabel.text = "\(round((distance / 1609.344) * 10.0) / 10.0) miles"
     }
     
     @IBAction func endRun(sender: AnyObject) {

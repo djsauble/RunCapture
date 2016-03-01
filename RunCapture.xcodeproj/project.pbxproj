@@ -15,6 +15,7 @@
 		FB438EC21C83D075009FA67E /* RunCaptureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438EC11C83D075009FA67E /* RunCaptureTests.swift */; };
 		FB438ECD1C83D075009FA67E /* RunCaptureUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438ECC1C83D075009FA67E /* RunCaptureUITests.swift */; };
 		FB438EDB1C83DAB2009FA67E /* CaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438EDA1C83DAB2009FA67E /* CaptureController.swift */; };
+		FB7C1AE51C8556C700CA8CEB /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7C1AE41C8556C700CA8CEB /* URL.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		FB438ECC1C83D075009FA67E /* RunCaptureUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunCaptureUITests.swift; sourceTree = "<group>"; };
 		FB438ECE1C83D075009FA67E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB438EDA1C83DAB2009FA67E /* CaptureController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureController.swift; sourceTree = "<group>"; };
+		FB7C1AE41C8556C700CA8CEB /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				FB438EB51C83D075009FA67E /* LaunchScreen.storyboard */,
 				FB438EB81C83D075009FA67E /* Info.plist */,
 				FB438EDA1C83DAB2009FA67E /* CaptureController.swift */,
+				FB7C1AE41C8556C700CA8CEB /* URL.swift */,
 			);
 			path = RunCapture;
 			sourceTree = "<group>";
@@ -262,6 +265,7 @@
 				FB438EDB1C83DAB2009FA67E /* CaptureController.swift in Sources */,
 				FB438EAF1C83D075009FA67E /* SetupController.swift in Sources */,
 				FB438EAD1C83D075009FA67E /* AppDelegate.swift in Sources */,
+				FB7C1AE51C8556C700CA8CEB /* URL.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,6 +492,7 @@
 				FB438ED31C83D075009FA67E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FB438ED41C83D075009FA67E /* Build configuration list for PBXNativeTarget "RunCaptureTests" */ = {
 			isa = XCConfigurationList;
@@ -496,6 +501,7 @@
 				FB438ED61C83D075009FA67E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FB438ED71C83D075009FA67E /* Build configuration list for PBXNativeTarget "RunCaptureUITests" */ = {
 			isa = XCConfigurationList;
@@ -504,6 +510,7 @@
 				FB438ED91C83D075009FA67E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

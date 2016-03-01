@@ -17,6 +17,7 @@ class CaptureController: UIViewController, CLLocationManagerDelegate {
     var locationManager: CLLocationManager!
     var pointsOnRoute: [CLLocation] = []
     var distance: Double = 0.0
+    var postURL: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()

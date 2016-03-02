@@ -17,6 +17,7 @@ class CaptureController: UIViewController, CLLocationManagerDelegate {
     var locationManager: CLLocationManager!
     var pointsOnRoute: [CLLocation] = []
     var distance: Double = 0.0
+    var deferringUpdates: Bool = false
     var postURL: String?
     
     override func viewDidLoad() {
@@ -27,6 +28,7 @@ class CaptureController: UIViewController, CLLocationManagerDelegate {
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.distanceFilter = kCLLocationAccuracyBest
+        self.locationManager.allowsBackgroundLocationUpdates = true
         
         // Clear counters
         pointsOnRoute = []
@@ -50,19 +52,31 @@ class CaptureController: UIViewController, CLLocationManagerDelegate {
     
     // Record the current location
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+
         // Calculate meters traversed
         if let last = pointsOnRoute.last {
-            self.distance += last.distanceFromLocation(locations.last!)
+            distance += last.distanceFromLocation(locations.first!)
+        }
+        for i in 1..<locations.count {
+            distance += locations[i].distanceFromLocation(locations[i - 1])
         }
         
-        // Add the new point to the array
-        pointsOnRoute.append(locations.last!)
+        // Add the new points to the array
+        pointsOnRoute.appendContentsOf(locations)
         
         // Display distance
-        distanceLabel.text = "\(round((distance / 1609.344) * 10.0) / 10.0) miles"
+        distanceLabel.text = "\(floor((distance / 1609.344) * 10.0) / 10.0) miles"
+        
+        // Defer updates when the app is backgrounded
+        if !self.deferringUpdates {
+            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: CLTimeIntervalMax)
+            self.deferringUpdates = true
+        }
     }
     
     @IBAction func endRun(sender: AnyObject) {
+        locationManager.stopUpdatingLocation()
+        
         if let url = postURL {
             let params = pointsOnRoute.map({
                 (location: CLLocation) -> Dictionary<String, String> in
@@ -78,7 +92,6 @@ class CaptureController: UIViewController, CLLocationManagerDelegate {
             post(params, url: url)
         }
         
-        locationManager.stopUpdatingLocation()
         navigationController?.popToRootViewControllerAnimated(true)
     }
     

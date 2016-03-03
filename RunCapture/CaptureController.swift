@@ -7,78 +7,31 @@
 //
 
 import UIKit
-import MapKit
 import CoreLocation
 
-class CaptureController: UIViewController, CLLocationManagerDelegate {
+class CaptureController: UIViewController {
     
     @IBOutlet weak var distanceLabel: UILabel!
     
-    var locationManager: CLLocationManager!
-    var pointsOnRoute: [CLLocation] = []
-    var distance: Double = 0.0
-    var deferringUpdates: Bool = false
     var postURL: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Set up the location manager
-        self.locationManager = CLLocationManager()
-        self.locationManager.delegate = self
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        self.locationManager.distanceFilter = kCLLocationAccuracyBest
-        self.locationManager.allowsBackgroundLocationUpdates = true
-        
-        // Clear counters
-        pointsOnRoute = []
-        distance = 0.0
-        
-        // Check authorization. Request location services.
-        if CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedAlways {
-            self.locationManager.startUpdatingLocation()
-        }
-        else {
-            self.locationManager.requestAlwaysAuthorization()
-        }
+        // Set the callback for the location manager and start capturing data
+        Location.singleton.callback = self.showProgress
+        Location.singleton.startCapture()
     }
     
-    // Location services authorization changed, start updating the location
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        if status == CLAuthorizationStatus.AuthorizedAlways {
-            self.locationManager.startUpdatingLocation()
-        }
-    }
-    
-    // Record the current location
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-
-        // Calculate meters traversed
-        if let last = pointsOnRoute.last {
-            distance += last.distanceFromLocation(locations.first!)
-        }
-        for i in 1..<locations.count {
-            distance += locations[i].distanceFromLocation(locations[i - 1])
-        }
-        
-        // Add the new points to the array
-        pointsOnRoute.appendContentsOf(locations)
-        
-        // Display distance
+    func showProgress(distance: Double) {
         distanceLabel.text = "\(floor((distance / 1609.344) * 10.0) / 10.0) miles"
-        
-        // Defer updates when the app is backgrounded
-        if !self.deferringUpdates {
-            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: CLTimeIntervalMax)
-            self.deferringUpdates = true
-        }
     }
     
     @IBAction func endRun(sender: AnyObject) {
-        locationManager.stopUpdatingLocation()
+        Location.singleton.stopCapture()
         
         if let url = postURL {
-            let params = pointsOnRoute.map({
+            let params = Location.singleton.pointsOnRoute.map({
                 (location: CLLocation) -> Dictionary<String, String> in
                 return [
                     "latitude": String(location.coordinate.latitude),
@@ -92,11 +45,15 @@ class CaptureController: UIViewController, CLLocationManagerDelegate {
             post(params, url: url)
         }
         
+        Location.singleton.resetCapture()
+        
         navigationController?.popToRootViewControllerAnimated(true)
     }
     
     @IBAction func abortRun(sender: AnyObject) {
-        locationManager.stopUpdatingLocation()
+        Location.singleton.stopCapture()
+        Location.singleton.resetCapture()
+        
         navigationController?.popToRootViewControllerAnimated(true)
     }
     

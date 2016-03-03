@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FB1A69F51C87C26000E374BA /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1A69F41C87C26000E374BA /* Location.swift */; };
 		FB438EAD1C83D075009FA67E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438EAC1C83D075009FA67E /* AppDelegate.swift */; };
 		FB438EAF1C83D075009FA67E /* SetupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438EAE1C83D075009FA67E /* SetupController.swift */; };
 		FB438EB21C83D075009FA67E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB438EB01C83D075009FA67E /* Main.storyboard */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FB1A69F41C87C26000E374BA /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		FB438EA91C83D075009FA67E /* RunCapture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RunCapture.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB438EAC1C83D075009FA67E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB438EAE1C83D075009FA67E /* SetupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupController.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				FB438EB81C83D075009FA67E /* Info.plist */,
 				FB438EDA1C83DAB2009FA67E /* CaptureController.swift */,
 				FB7C1AE41C8556C700CA8CEB /* URL.swift */,
+				FB1A69F41C87C26000E374BA /* Location.swift */,
 			);
 			path = RunCapture;
 			sourceTree = "<group>";
@@ -264,6 +267,7 @@
 			files = (
 				FB438EDB1C83DAB2009FA67E /* CaptureController.swift in Sources */,
 				FB438EAF1C83D075009FA67E /* SetupController.swift in Sources */,
+				FB1A69F51C87C26000E374BA /* Location.swift in Sources */,
 				FB438EAD1C83D075009FA67E /* AppDelegate.swift in Sources */,
 				FB7C1AE51C8556C700CA8CEB /* URL.swift in Sources */,
 			);

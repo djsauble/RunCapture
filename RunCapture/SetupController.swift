@@ -17,9 +17,13 @@ class SetupController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        // Restore the token URL, if previously set
         if let text = url.url {
             urlTextField.text = text
         }
+        
+        // Reset any capture data, get ready for the next run
+        Location.singleton.resetCapture()
     }
 
     override func didReceiveMemoryWarning() {

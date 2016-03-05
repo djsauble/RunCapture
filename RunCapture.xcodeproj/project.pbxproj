@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		FB1A69F51C87C26000E374BA /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1A69F41C87C26000E374BA /* Location.swift */; };
+		FB3407FE1C8A9EF7009614C2 /* RouteUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB3407FD1C8A9EF7009614C2 /* RouteUpload.swift */; };
 		FB438EAD1C83D075009FA67E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438EAC1C83D075009FA67E /* AppDelegate.swift */; };
 		FB438EAF1C83D075009FA67E /* SetupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438EAE1C83D075009FA67E /* SetupController.swift */; };
 		FB438EB21C83D075009FA67E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB438EB01C83D075009FA67E /* Main.storyboard */; };
@@ -38,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		FB1A69F41C87C26000E374BA /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		FB3407FD1C8A9EF7009614C2 /* RouteUpload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteUpload.swift; sourceTree = "<group>"; };
 		FB438EA91C83D075009FA67E /* RunCapture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RunCapture.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB438EAC1C83D075009FA67E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB438EAE1C83D075009FA67E /* SetupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupController.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				FB438EDA1C83DAB2009FA67E /* CaptureController.swift */,
 				FB7C1AE41C8556C700CA8CEB /* URL.swift */,
 				FB1A69F41C87C26000E374BA /* Location.swift */,
+				FB3407FD1C8A9EF7009614C2 /* RouteUpload.swift */,
 			);
 			path = RunCapture;
 			sourceTree = "<group>";
@@ -265,6 +268,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB3407FE1C8A9EF7009614C2 /* RouteUpload.swift in Sources */,
 				FB438EDB1C83DAB2009FA67E /* CaptureController.swift in Sources */,
 				FB438EAF1C83D075009FA67E /* SetupController.swift in Sources */,
 				FB1A69F51C87C26000E374BA /* Location.swift in Sources */,

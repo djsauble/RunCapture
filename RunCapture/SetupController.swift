@@ -35,6 +35,10 @@ class SetupController: UIViewController {
         if segue.identifier == "toCapture" {
             if let destinationVC = segue.destinationViewController as? CaptureController {
                 if urlTextField.text?.characters.count > 0 {
+                    // Reset the capture data
+                    Location.singleton.resetCapture()
+                    
+                    // Set the URL based on the contents of the text box
                     url.url = urlTextField.text
                     destinationVC.postURL = url.url
                     url.saveURL()

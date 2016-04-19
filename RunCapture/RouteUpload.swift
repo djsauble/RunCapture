@@ -30,16 +30,15 @@ class RouteUpload: NSObject, NSURLSessionDelegate {
         
         // Configure HTTP request
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-        request.HTTPMethod = "POST"
+        request.HTTPMethod = "PUT"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
         
         // Serialize the JSON and write it to a file
         var path: String? = nil
         do {
             let options = NSJSONWritingOptions()
             let data = try NSJSONSerialization.dataWithJSONObject(params, options: options)
-            
+
             // Create a file for upload
             let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
             let docs: NSString = paths[0] as NSString
@@ -73,7 +72,10 @@ class RouteUpload: NSObject, NSURLSessionDelegate {
     }
     
     func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
-        print("Authentication requested");
+        completionHandler(
+            NSURLSessionAuthChallengeDisposition.UseCredential,
+            NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!)
+        )
     }
     
     func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {

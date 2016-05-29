@@ -15,7 +15,6 @@ class Location: NSObject, CLLocationManagerDelegate {
     var locationManager: CLLocationManager
     var pointsOnRoute: [CLLocation] = []
     var distance: Double = 0.0
-    var accuracyThreshold: Double = 20.0 // Points with worse accuracy won’t be included in the capture
     var capturingData: Bool = false
     var deferringUpdates: Bool = false
     var callback: ((distance: Double) -> Void)?
@@ -74,31 +73,22 @@ class Location: NSObject, CLLocationManagerDelegate {
             return
         }
         
-        // Filter the locations to those which meet our accuracy threshold
-        var accurateLocations: [CLLocation] = []
-        for location in locations {
-            if location.horizontalAccuracy > self.accuracyThreshold {
-                continue
-            }
-            accurateLocations.append(location)
-        }
-        
         // Calculate additional distance traveled
-        if accurateLocations.count > 0 {
+        if locations.count > 0 {
             
             // Calculate meters traversed
             if let last = pointsOnRoute.last {
-                distance += last.distanceFromLocation(accurateLocations.first!)
+                distance += last.distanceFromLocation(locations.first!)
             }
         }
-        if accurateLocations.count > 1 {
-            for i in 1..<accurateLocations.count {
-                distance += accurateLocations[i].distanceFromLocation(accurateLocations[i - 1])
+        if locations.count > 1 {
+            for i in 1..<locations.count {
+                distance += locations[i].distanceFromLocation(locations[i - 1])
             }
         }
             
         // Add the new points to the array
-        pointsOnRoute.appendContentsOf(accurateLocations)
+        pointsOnRoute.appendContentsOf(locations)
             
         // Pass distance to the callback
         if let cb = self.callback {

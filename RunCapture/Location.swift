@@ -15,6 +15,7 @@ class Location: NSObject, CLLocationManagerDelegate {
     var locationManager: CLLocationManager
     var pointsOnRoute: [CLLocation] = []
     var distance: Double = 0.0
+    var accuracyThreshold: Double = 20.0
     var capturingData: Bool = false
     var deferringUpdates: Bool = false
     var callback: ((distance: Double) -> Void)?
@@ -73,22 +74,11 @@ class Location: NSObject, CLLocationManagerDelegate {
             return
         }
         
-        // Calculate additional distance traveled
-        if locations.count > 0 {
-            
-            // Calculate meters traversed
-            if let last = pointsOnRoute.last {
-                distance += last.distanceFromLocation(locations.first!)
-            }
-        }
-        if locations.count > 1 {
-            for i in 1..<locations.count {
-                distance += locations[i].distanceFromLocation(locations[i - 1])
-            }
-        }
-            
+        // Calculate distance traveled
+        self.appendDistance(locations)
+        
         // Add the new points to the array
-        pointsOnRoute.appendContentsOf(locations)
+        self.pointsOnRoute.appendContentsOf(locations)
             
         // Pass distance to the callback
         if let cb = self.callback {
@@ -99,6 +89,66 @@ class Location: NSObject, CLLocationManagerDelegate {
         if !self.deferringUpdates {
             self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: CLTimeIntervalMax)
             self.deferringUpdates = true
+        }
+    }
+    
+    // Calculate additional distance traveled
+    func appendDistance(locations: [CLLocation]) {
+        var copy: [CLLocation] = [];
+        var accuratePoints: [CLLocation] = [];
+        var contiguousPoints: [CLLocation] = [];
+
+        // Create a copy of the location data and prepend the last point of the existing route
+        if self.pointsOnRoute.count >= 1 {
+            copy.append(self.pointsOnRoute.last!)
+        }
+        copy.appendContentsOf(locations)
+        
+        // Filter out inaccurate points
+        accuratePoints = copy.filter({
+            (location: CLLocation) -> Bool in
+            return location.horizontalAccuracy <= self.accuracyThreshold
+        })
+        
+        if accuratePoints.count <= 1 {
+            return;
+        }
+        
+        // Filter out discontinuities (points that aren't adjacent to any other points), excluding the first and last points
+        if accuratePoints.count >= 3 {
+            for i in 1..<(accuratePoints.count - 1) {
+                let d1 = accuratePoints[i-1].distanceFromLocation(accuratePoints[i]);
+                let d2 = accuratePoints[i].distanceFromLocation(accuratePoints[i+1]);
+                if d1 <= self.accuracyThreshold && d2 <= self.accuracyThreshold {
+                    contiguousPoints.append(accuratePoints[i]);
+                }
+            }
+        }
+        
+        if accuratePoints.count >= 2 {
+            // See if the first point is a discontinuity
+            let firstPoint = accuratePoints.first!
+            let nextPoint = accuratePoints[1]
+            if firstPoint.distanceFromLocation(nextPoint) <= self.accuracyThreshold {
+                contiguousPoints.append(firstPoint);
+            }
+        
+            // See if the last point is a discontinuity
+            let penultimatePoint = accuratePoints[accuratePoints.count - 2]
+            let lastPoint = accuratePoints.last!
+            if penultimatePoint.distanceFromLocation(lastPoint) <= self.accuracyThreshold {
+                contiguousPoints.append(lastPoint);
+            }
+        }
+        
+        // Must be at least two points to calculate distance
+        if contiguousPoints.count <= 1 {
+            return;
+        }
+        
+        // Calculate meters traversed
+        for i in 1..<contiguousPoints.count {
+            distance += contiguousPoints[i - 1].distanceFromLocation(contiguousPoints[i])
         }
     }
     

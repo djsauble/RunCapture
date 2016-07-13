@@ -74,11 +74,11 @@ class Location: NSObject, CLLocationManagerDelegate {
             return
         }
         
-        // Calculate distance traveled
-        self.appendDistance(locations)
-        
         // Add the new points to the array
         self.pointsOnRoute.appendContentsOf(locations)
+        
+        // Calculate distance traveled
+        self.refreshDistance()
             
         // Pass distance to the callback
         if let cb = self.callback {
@@ -93,19 +93,14 @@ class Location: NSObject, CLLocationManagerDelegate {
     }
     
     // Calculate additional distance traveled
-    func appendDistance(locations: [CLLocation]) {
-        var copy: [CLLocation] = [];
+    func refreshDistance() {
+        print("---")
+        print(">> start")
         var accuratePoints: [CLLocation] = [];
         var contiguousPoints: [CLLocation] = [];
-
-        // Create a copy of the location data and prepend the last point of the existing route
-        if self.pointsOnRoute.count >= 1 {
-            copy.append(self.pointsOnRoute.last!)
-        }
-        copy.appendContentsOf(locations)
         
         // Filter out inaccurate points
-        accuratePoints = copy.filter({
+        accuratePoints = self.pointsOnRoute.filter({
             (location: CLLocation) -> Bool in
             return location.horizontalAccuracy <= self.accuracyThreshold
         })
@@ -130,7 +125,7 @@ class Location: NSObject, CLLocationManagerDelegate {
             let firstPoint = accuratePoints.first!
             let nextPoint = accuratePoints[1]
             if firstPoint.distanceFromLocation(nextPoint) <= self.accuracyThreshold {
-                contiguousPoints.append(firstPoint);
+                contiguousPoints.insert(firstPoint, atIndex: 0);
             }
         
             // See if the last point is a discontinuity
@@ -147,9 +142,14 @@ class Location: NSObject, CLLocationManagerDelegate {
         }
         
         // Calculate meters traversed
+        var d: Double = 0.0;
         for i in 1..<contiguousPoints.count {
-            distance += contiguousPoints[i - 1].distanceFromLocation(contiguousPoints[i])
+            d += contiguousPoints[i - 1].distanceFromLocation(contiguousPoints[i])
         }
+        distance = d;
+        print(contiguousPoints.count)
+        print(distance)
+        print("<< end")
     }
     
     // Prepare data for submission

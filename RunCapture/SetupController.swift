@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SetupController: UIViewController {
+class SetupController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var urlTextField: UITextField!
     var url: URL = URL()
@@ -16,6 +16,9 @@ class SetupController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        // Make this controller handle any text field events
+        urlTextField.delegate = self;
         
         // Restore the token URL, if previously set
         if let text = url.url {
@@ -45,6 +48,11 @@ class SetupController: UIViewController {
                 }
             }
         }
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
 

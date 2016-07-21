@@ -74,11 +74,11 @@ class Location: NSObject, CLLocationManagerDelegate {
             return
         }
         
+        // Append distance traveled
+        self.appendDistance(locations)
+        
         // Add the new points to the array
         self.pointsOnRoute.appendContentsOf(locations)
-        
-        // Calculate distance traveled
-        self.refreshDistance()
             
         // Pass distance to the callback
         if let cb = self.callback {
@@ -93,20 +93,44 @@ class Location: NSObject, CLLocationManagerDelegate {
     }
     
     // Calculate additional distance traveled
-    func refreshDistance() {
-        print("---")
-        print(">> start")
+    func appendDistance(locations: [CLLocation]) {
+        var copy: [CLLocation] = [];
         var accuratePoints: [CLLocation] = [];
         var contiguousPoints: [CLLocation] = [];
+        var adjacentPoint: CLLocation? = nil;
+        
+        // Create a copy of the location data
+        copy.appendContentsOf(locations);
         
         // Filter out inaccurate points
-        accuratePoints = self.pointsOnRoute.filter({
+        accuratePoints = copy.filter({
             (location: CLLocation) -> Bool in
             return location.horizontalAccuracy <= self.accuracyThreshold
         })
         
-        if accuratePoints.count <= 1 {
+        // Must be at least one accurate point
+        if accuratePoints.count == 0 {
             return;
+        }
+        
+        // Find an adjacent point from the GPS history
+        var i = self.pointsOnRoute.count - 1;
+        while (i >= 0) {
+            let candidate = self.pointsOnRoute[i];
+            // Must be accurate
+            if candidate.horizontalAccuracy <= self.accuracyThreshold {
+                // Must be adjacent
+                if candidate.distanceFromLocation(locations[0]) <= self.accuracyThreshold {
+                    adjacentPoint = candidate;
+                    break;
+                }
+            }
+            i -= 1;
+        }
+        
+        // If found, prepend it to our array
+        if let p = adjacentPoint {
+            accuratePoints.insert(p, atIndex: 0);
         }
         
         // Filter out discontinuities (points that aren't adjacent to any other points), excluding the first and last points
@@ -146,10 +170,11 @@ class Location: NSObject, CLLocationManagerDelegate {
         for i in 1..<contiguousPoints.count {
             d += contiguousPoints[i - 1].distanceFromLocation(contiguousPoints[i])
         }
-        distance = d;
-        print(contiguousPoints.count)
-        print(distance)
-        print("<< end")
+        
+        // Append distance to the class
+        self.distance += d;
+        
+        print(self.distance);
     }
     
     // Prepare data for submission

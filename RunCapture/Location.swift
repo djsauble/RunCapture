@@ -173,8 +173,6 @@ class Location: NSObject, CLLocationManagerDelegate {
         
         // Append distance to the class
         self.distance += d;
-        
-        print(self.distance);
     }
     
     // Prepare data for submission

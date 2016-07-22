@@ -32,15 +32,19 @@ class SetupController: UIViewController, UITextFieldDelegate {
     
     func websocketTest() {
         let ws = WebSocket()
-        ws.allowSelfSignedSSL = true
         ws.event.open = {
-            ws.send(self.urlTextField.text!)
+            ws.send("{\"type\": \"use_token\", \"token\": \"\(self.urlTextField.text!)\"}")
         }
         ws.event.message = { message in
             self.urlTextField.text = String(message)
             ws.close()
         }
-        ws.open("wss://api-generator2.herokuapp.com")
+        // Production settings
+        ws.allowSelfSignedSSL = true
+        ws.open("wss://api-generator2.herokuapp.com/ws")
+        
+        // Test settings
+        //ws.open("ws://127.0.0.1:5000/ws")
     }
 
     override func didReceiveMemoryWarning() {

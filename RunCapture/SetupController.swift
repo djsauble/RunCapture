@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftWebSocket
 
 class SetupController: UIViewController, UITextFieldDelegate {
 
@@ -27,6 +28,21 @@ class SetupController: UIViewController, UITextFieldDelegate {
         
         // Reset any capture data, get ready for the next run
         Location.singleton.resetCapture()
+    }
+    
+    func websocketTest() {
+        let ws = WebSocket()
+        ws.allowSelfSignedSSL = true
+        ws.event.open = {
+            print("Sending stuff")
+            ws.send(self.urlTextField.text!)
+        }
+        ws.event.message = { message in
+            print(String(message))
+            self.urlTextField.text = String(message)
+            ws.close()
+        }
+        ws.open("wss://api-generator2.herokuapp.com")
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,6 +68,10 @@ class SetupController: UIViewController, UITextFieldDelegate {
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        
+        // Attempt to retrieve the real URL from the server
+        websocketTest()
+
         return true
     }
 }

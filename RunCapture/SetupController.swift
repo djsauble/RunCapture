@@ -34,11 +34,9 @@ class SetupController: UIViewController, UITextFieldDelegate {
         let ws = WebSocket()
         ws.allowSelfSignedSSL = true
         ws.event.open = {
-            print("Sending stuff")
             ws.send(self.urlTextField.text!)
         }
         ws.event.message = { message in
-            print(String(message))
             self.urlTextField.text = String(message)
             ws.close()
         }

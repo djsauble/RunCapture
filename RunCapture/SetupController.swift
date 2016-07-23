@@ -10,41 +10,54 @@ import UIKit
 import SwiftWebSocket
 
 class SetupController: UIViewController, UITextFieldDelegate {
+    
+    @IBOutlet weak var logInView: UIView!
+    
+    @IBOutlet weak var tokenView: UIView!
+    @IBOutlet weak var tokenFieldOne: UITextField!
+    @IBOutlet weak var tokenFieldTwo: UITextField!
+    @IBOutlet weak var tokenFieldThree: UITextField!
+    @IBOutlet weak var tokenFieldFour: UITextField!
 
-    @IBOutlet weak var urlTextField: UITextField!
     var url: URL = URL()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        // Do we have a URL?
+        updateHideState()
+        
+        // Listen for notifications
+        let notificationCenter = NSNotificationCenter.defaultCenter()
+        let mainQueue = NSOperationQueue.mainQueue()
+        let observer = notificationCenter.addObserverForName(UITextFieldTextDidChangeNotification, object: nil, queue: mainQueue) { notification in
+            if let textField = notification.object as! UITextField! {
+                if textField == self.tokenFieldOne {
+                    self.tokenFieldTwo.becomeFirstResponder()
+                }
+                else if textField == self.tokenFieldTwo {
+                    self.tokenFieldThree.becomeFirstResponder()
+                }
+                else if textField == self.tokenFieldThree {
+                    self.tokenFieldFour.becomeFirstResponder()
+                }
+                else if textField == self.tokenFieldFour {
+                    textField.resignFirstResponder()
+                    
+                    // Attempt to retrieve the real URL from the server
+                    self.fetchURL()
+                }
+            }
+        }
         
         // Make this controller handle any text field events
-        urlTextField.delegate = self;
-        
-        // Restore the token URL, if previously set
-        if let text = url.url {
-            urlTextField.text = text
-        }
+        tokenFieldOne.delegate = self
+        tokenFieldTwo.delegate = self
+        tokenFieldThree.delegate = self
+        tokenFieldFour.delegate = self
         
         // Reset any capture data, get ready for the next run
         Location.singleton.resetCapture()
-    }
-    
-    func websocketTest() {
-        let ws = WebSocket()
-        ws.event.open = {
-            ws.send("{\"type\": \"use_token\", \"token\": \"\(self.urlTextField.text!)\"}")
-        }
-        ws.event.message = { message in
-            self.urlTextField.text = String(message)
-            ws.close()
-        }
-        // Production settings
-        ws.allowSelfSignedSSL = true
-        ws.open("wss://api-generator2.herokuapp.com/ws")
-        
-        // Test settings
-        //ws.open("ws://127.0.0.1:5000/ws")
     }
 
     override func didReceiveMemoryWarning() {
@@ -55,26 +68,59 @@ class SetupController: UIViewController, UITextFieldDelegate {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if segue.identifier == "toCapture" {
             if let destinationVC = segue.destinationViewController as? CaptureController {
-                if urlTextField.text?.characters.count > 0 {
-                    // Reset the capture data
-                    Location.singleton.resetCapture()
+                // Reset the capture data
+                Location.singleton.resetCapture()
                     
-                    // Set the URL based on the contents of the text box
-                    url.url = urlTextField.text
-                    destinationVC.postURL = url.url
-                    url.saveURL()
-                }
+                // Set the URL based on the contents of the text box
+                destinationVC.postURL = url.url
             }
         }
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+    @IBAction func logOut(sender: AnyObject) {
+        self.url.url = ""
+        self.url.saveURL()
+        self.updateHideState()
+    }
+    
+    func fetchURL() {
+        let token = "\(self.tokenFieldOne.text!)\(self.tokenFieldTwo.text!)\(self.tokenFieldThree.text!)\(self.tokenFieldFour.text!)"
+        let ws = WebSocket()
+        ws.event.open = {
+            ws.send("{\"type\": \"use_token\", \"token\": \"\(token)\"}")
+        }
+        ws.event.message = { message in
+            self.url.url = String(message)
+            self.url.saveURL()
+            self.updateHideState()
+            ws.close()
+        }
+        ws.event.error = { err in
+            self.url.url = ""
+            self.url.saveURL()
+            ws.close()
+        }
+        // Production settings
+        ws.allowSelfSignedSSL = true
+        ws.open("wss://api-generator2.herokuapp.com/ws")
         
-        // Attempt to retrieve the real URL from the server
-        websocketTest()
-
-        return true
+        // Test settings
+        //ws.open("ws://127.0.0.1:5000/ws")
+    }
+    
+    func updateHideState() {
+        // Show the token view if no URL is set
+        if let url = self.url.url {
+            if url == "" {
+                self.tokenView.hidden = false
+                self.logInView.hidden = true
+                return
+            }
+        }
+        
+        // Otherwise, show the run button
+        self.tokenView.hidden = true
+        self.logInView.hidden = false
     }
 }
 

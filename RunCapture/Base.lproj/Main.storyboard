@@ -34,44 +34,88 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="URL for run submission" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v7G-gd-uer">
-                                <rect key="frame" x="211" y="175" width="178" height="20.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Va-9b-oot">
-                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="QN6-bf-chb"/>
-                                    <barButtonItem title="Start Run" id="o4W-4d-fnZ">
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OXp-If-cgX" userLabel="Token">
+                                <rect key="frame" x="142" y="195" width="316" height="139"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Enter your token" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b8g-Ni-dAO">
+                                        <rect key="frame" x="95" y="8" width="126" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="uke-RC-3eX">
+                                        <rect key="frame" x="20" y="37" width="276" height="82"/>
+                                        <subviews>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Jkz-SD-SKw">
+                                                <rect key="frame" x="0.0" y="0.0" width="58" height="82"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="66"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
+                                            </textField>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NsF-yv-75E">
+                                                <rect key="frame" x="73" y="0.0" width="58" height="82"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="66"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
+                                            </textField>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5gx-vd-bDi">
+                                                <rect key="frame" x="146" y="0.0" width="58" height="82"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="66"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
+                                            </textField>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="f9e-C1-WSm">
+                                                <rect key="frame" x="219" y="0.0" width="58" height="82"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="66"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done"/>
+                                            </textField>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="82" id="4oG-pw-Caq"/>
+                                            <constraint firstAttribute="width" constant="276" id="hje-xb-HWE"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="A7w-YG-84K" userLabel="Logged In">
+                                <rect key="frame" x="180" y="202" width="240" height="128"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t2q-SD-4DU">
+                                        <rect key="frame" x="30" y="8" width="180" height="70"/>
+                                        <color key="backgroundColor" red="0.066666666666666666" green="0.40000000000000002" blue="0.99607843137254903" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                        <state key="normal" title="Go for a run">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
                                         <connections>
-                                            <segue destination="1KD-h6-u4f" kind="show" identifier="toCapture" id="UIx-gj-Y0t"/>
+                                            <segue destination="1KD-h6-u4f" kind="show" identifier="toCapture" id="qYo-8l-5Gh"/>
                                         </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Sj9-Vj-Q2O"/>
-                                </items>
-                            </toolbar>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="zlb-cs-eBl">
-                                <rect key="frame" x="20" y="203" width="560" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done"/>
-                            </textField>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="52z-B9-4b3">
+                                        <rect key="frame" x="94" y="98" width="52" height="30"/>
+                                        <state key="normal" title="Log out"/>
+                                        <connections>
+                                            <action selector="logOut:" destination="fT7-ny-OUY" eventType="primaryActionTriggered" id="OKE-m1-twX"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="zlb-cs-eBl" firstAttribute="trailing" secondItem="LGL-11-nLH" secondAttribute="trailingMargin" id="3Nm-eQ-CJy"/>
-                            <constraint firstItem="zlb-cs-eBl" firstAttribute="top" secondItem="iyt-nz-BG6" secondAttribute="bottom" constant="139.5" id="4lN-eL-aMD"/>
-                            <constraint firstItem="zlb-cs-eBl" firstAttribute="leading" secondItem="LGL-11-nLH" secondAttribute="leadingMargin" id="GNK-4t-xcU"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="5Va-9b-oot" secondAttribute="trailing" constant="-20" id="cl7-JI-7zG"/>
-                            <constraint firstItem="v7G-gd-uer" firstAttribute="centerX" secondItem="LGL-11-nLH" secondAttribute="centerX" id="mAw-pn-uyp"/>
-                            <constraint firstItem="5Va-9b-oot" firstAttribute="leading" secondItem="LGL-11-nLH" secondAttribute="leadingMargin" constant="-20" id="tVT-hi-QXD"/>
-                            <constraint firstItem="R11-uo-TaL" firstAttribute="top" secondItem="5Va-9b-oot" secondAttribute="bottom" id="yIt-L5-Szu"/>
+                            <constraint firstItem="OXp-If-cgX" firstAttribute="centerX" secondItem="LGL-11-nLH" secondAttribute="centerX" id="8g8-nW-yf5"/>
+                            <constraint firstItem="A7w-YG-84K" firstAttribute="centerX" secondItem="LGL-11-nLH" secondAttribute="centerX" id="Ili-0c-XK9"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Jby-S0-bpt"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="600"/>
                     <connections>
-                        <outlet property="urlTextField" destination="zlb-cs-eBl" id="VD1-cE-BSe"/>
+                        <outlet property="logInView" destination="A7w-YG-84K" id="Z0B-B1-urz"/>
+                        <outlet property="tokenFieldFour" destination="f9e-C1-WSm" id="dzC-qJ-E1F"/>
+                        <outlet property="tokenFieldOne" destination="Jkz-SD-SKw" id="1RJ-Ie-XDw"/>
+                        <outlet property="tokenFieldThree" destination="5gx-vd-bDi" id="40n-k1-HpH"/>
+                        <outlet property="tokenFieldTwo" destination="NsF-yv-75E" id="oiU-Zw-SaB"/>
+                        <outlet property="tokenView" destination="OXp-If-cgX" id="zpo-fs-41P"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N8T-D6-RCP" userLabel="First Responder" sceneMemberID="firstResponder"/>

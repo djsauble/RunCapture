@@ -8,16 +8,20 @@
 
 import Foundation
 
-class RouteUpload: NSObject, NSURLSessionDelegate {
+class RouteUpload: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
     
     static var singleton = RouteUpload()
     
     var task: NSURLSessionUploadTask?
     var session: NSURLSession?
     var id = "runcapture"
+    var savedCompletionHandler: (() -> Void)?
+    var responsesData: [Int:NSMutableData] = [:]
+    var responseData: NSMutableData? = nil
     
     override init() {
-        self.session = nil;
+        self.session = nil
+        self.savedCompletionHandler = nil
         
         super.init()
         
@@ -27,7 +31,6 @@ class RouteUpload: NSObject, NSURLSessionDelegate {
     
     // Submit data to the web service
     func post(params: [Dictionary<String, String>], url: String) {
-        
         // Configure HTTP request
         let request = NSMutableURLRequest(URL: NSURL(string: url)!)
         request.HTTPMethod = "PUT"
@@ -42,7 +45,8 @@ class RouteUpload: NSObject, NSURLSessionDelegate {
             // Create a file for upload
             let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
             let docs: NSString = paths[0] as NSString
-            path = docs.stringByAppendingPathComponent("uploadfile.json")
+            let filename = NSUUID().UUIDString
+            path = docs.stringByAppendingPathComponent("\(filename).json")
             let test = data.writeToFile(path!, atomically: true)
             if test {
                 print("File written to disk successfully!")
@@ -71,6 +75,41 @@ class RouteUpload: NSObject, NSURLSessionDelegate {
         print("Session invalidated!");
     }
     
+    
+    func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
+        if let err = error {
+            print("Error!")
+            print(err)
+        }
+        else {
+            print("All done")
+        }
+        
+        self.responseData = self.responsesData[task.taskIdentifier]
+        
+        if let r = self.responseData {
+            if let str = NSString(data: r, encoding: NSUTF8StringEncoding) {
+                print(str)
+            }
+            
+        }
+        else {
+            print("Response is nil")
+        }
+    }
+    
+    func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
+        print("Received data!")
+        self.responseData = self.responsesData[dataTask.taskIdentifier]
+        if self.responseData != nil {
+            self.responseData!.appendData(data)
+        }
+        else {
+            self.responseData = NSMutableData(data: data)
+            self.responsesData[dataTask.taskIdentifier] = self.responseData!
+        }
+    }
+    
     func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
         completionHandler(
             NSURLSessionAuthChallengeDisposition.UseCredential,
@@ -80,5 +119,10 @@ class RouteUpload: NSObject, NSURLSessionDelegate {
     
     func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {
         print("All enqueued messages delivered");
+        
+        if let handler = self.savedCompletionHandler {
+            handler()
+            self.savedCompletionHandler = nil
+        }
     }
 }

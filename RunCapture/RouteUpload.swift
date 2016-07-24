@@ -61,16 +61,25 @@ class RouteUpload: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
         }
     }
     
+    // Kick the queue (start an upload if none in progress)
+    func kick() {
+        // Any uploads in progress?
+        if self.task == nil || self.task!.state == NSURLSessionTaskState.Completed {
+            // Any runs in the queue?
+            if let files = self.pending.files {
+                if files.count > 0 {
+                    self.upload(self.pending.files!.first!)
+                }
+            }
+        }
+    }
+    
     // Queue a file for upload
     func queue(file: String) {
         if self.pending.files != nil {
             self.pending.files!.append(file)
             self.pending.saveFileList()
-            
-            // If no other files are being uploaded, start the upload immediately
-            if self.task == nil || self.task!.state == NSURLSessionTaskState.Completed {
-                self.upload(self.pending.files!.first!)
-            }
+            self.kick()
         }
     }
     

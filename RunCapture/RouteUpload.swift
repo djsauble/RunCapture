@@ -18,6 +18,7 @@ class RouteUpload: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
     var savedCompletionHandler: (() -> Void)?
     var responsesData: [Int:NSMutableData] = [:]
     var responseData: NSMutableData? = nil
+    var pending = FileList()
     
     override init() {
         self.session = nil
@@ -25,16 +26,13 @@ class RouteUpload: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
         
         super.init()
         
+        // Configure the URL session
         let config = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier(id)
         self.session = NSURLSession(configuration: config, delegate: self, delegateQueue: nil)
     }
     
     // Submit data to the web service
-    func post(params: [Dictionary<String, String>], url: String) {
-        // Configure HTTP request
-        let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-        request.HTTPMethod = "PUT"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+    func post(params: [Dictionary<String, String>]) {
         
         // Serialize the JSON and write it to a file
         var path: String? = nil
@@ -45,11 +43,14 @@ class RouteUpload: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
             // Create a file for upload
             let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
             let docs: NSString = paths[0] as NSString
-            let filename = NSUUID().UUIDString
-            path = docs.stringByAppendingPathComponent("\(filename).json")
+            let filename = "\(NSUUID().UUIDString).json"
+            path = docs.stringByAppendingPathComponent(filename)
             let test = data.writeToFile(path!, atomically: true)
             if test {
                 print("File written to disk successfully!")
+                
+                // Add the file to the upload queue
+                self.queue(filename)
             }
             else {
                 print("File write FAILED")
@@ -58,14 +59,40 @@ class RouteUpload: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
         catch {
             print("Error serializing params!")
         }
+    }
+    
+    // Queue a file for upload
+    func queue(file: String) {
+        if self.pending.files != nil {
+            self.pending.files!.append(file)
+            self.pending.saveFileList()
             
-        // Upload the JSON
-        if let p = path {
-            print("Uploading \(p) to \(url)")
-            self.task = self.session?.uploadTaskWithRequest(request, fromFile: NSURL(fileURLWithPath: p));
+            // If no other files are being uploaded, start the upload immediately
+            if self.task == nil || self.task!.state == NSURLSessionTaskState.Completed {
+                self.upload(self.pending.files!.first!)
+            }
+        }
+    }
+    
+    // Upload a file that is stored on disk
+    func upload(file: String) {
+        if let url = URL.singleton.url {
+            // Configure HTTP request
+            let request = NSMutableURLRequest(URL: NSURL(string: url)!)
+            request.HTTPMethod = "PUT"
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            // Start the upload
+            let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+            let docs: NSString = paths[0] as NSString
+            let path = docs.stringByAppendingPathComponent(file)
+            self.task = self.session?.uploadTaskWithRequest(request, fromFile: NSURL(fileURLWithPath: path));
             if let t = task {
                 t.resume();
             }
+        }
+        else {
+            print("No URL specified. Cannot upload.")
         }
     }
     
@@ -89,7 +116,30 @@ class RouteUpload: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
         
         if let r = self.responseData {
             if let str = NSString(data: r, encoding: NSUTF8StringEncoding) {
-                print(str)
+                if str.length == 0 {
+                    if self.pending.files != nil {
+                        // Delete the file that has been uploaded successfully
+                        do {
+                            let file = self.pending.files!.removeFirst()
+                            self.pending.saveFileList()
+                            let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+                            let docs: NSString = paths[0] as NSString
+                            let path = docs.stringByAppendingPathComponent(file)
+                            try NSFileManager.defaultManager().removeItemAtPath(path)
+                        } catch _ {
+                            print("Was unable to delete the old file")
+                        }
+                        
+                        // See if there are more files to upload
+                        if self.pending.files!.count > 0 {
+                            print("Starting the next upload...")
+                            self.upload(self.pending.files!.first!)
+                        }
+                    }
+                }
+                else {
+                    print(str)
+                }
             }
             
         }

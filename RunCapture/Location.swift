@@ -176,20 +176,18 @@ class Location: NSObject, CLLocationManagerDelegate {
     }
     
     // Prepare data for submission
-    func submitData(postURL: String?) {
-        if let url = postURL {
-            let params = Location.singleton.pointsOnRoute.map({
-                (location: CLLocation) -> Dictionary<String, String> in
-                return [
-                    "latitude": String(location.coordinate.latitude),
-                    "longitude": String(location.coordinate.longitude),
-                    "accuracy": String(location.horizontalAccuracy),
-                    "timestamp": location.timestamp.descriptionWithLocale(nil),
-                    "speed": String(location.speed)
-                ]
-            })
-            
-            RouteUpload.singleton.post(params, url: url)
-        }
+    func submitData() {
+        let params = Location.singleton.pointsOnRoute.map({
+            (location: CLLocation) -> Dictionary<String, String> in
+            return [
+                "latitude": String(location.coordinate.latitude),
+                "longitude": String(location.coordinate.longitude),
+                "accuracy": String(location.horizontalAccuracy),
+                "timestamp": location.timestamp.descriptionWithLocale(nil),
+                "speed": String(location.speed)
+            ]
+        })
+
+        RouteUpload.singleton.post(params)
     }
 }

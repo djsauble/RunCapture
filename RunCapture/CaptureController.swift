@@ -13,8 +13,6 @@ class CaptureController: UIViewController {
     
     @IBOutlet weak var distanceLabel: UILabel!
     
-    var postURL: String?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -29,7 +27,7 @@ class CaptureController: UIViewController {
     
     @IBAction func endRun(sender: AnyObject) {
         Location.singleton.stopCapture()
-        Location.singleton.submitData(self.postURL)
+        Location.singleton.submitData()
         
         navigationController?.popToRootViewControllerAnimated(true)
     }

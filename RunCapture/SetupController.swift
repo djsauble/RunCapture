@@ -18,8 +18,6 @@ class SetupController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var tokenFieldTwo: UITextField!
     @IBOutlet weak var tokenFieldThree: UITextField!
     @IBOutlet weak var tokenFieldFour: UITextField!
-
-    var url: URL = URL()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,19 +65,14 @@ class SetupController: UIViewController, UITextFieldDelegate {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if segue.identifier == "toCapture" {
-            if let destinationVC = segue.destinationViewController as? CaptureController {
-                // Reset the capture data
-                Location.singleton.resetCapture()
-                    
-                // Set the URL based on the contents of the text box
-                destinationVC.postURL = url.url
-            }
+            // Reset the capture data
+            Location.singleton.resetCapture()
         }
     }
     
     @IBAction func logOut(sender: AnyObject) {
-        self.url.url = ""
-        self.url.saveURL()
+        URL.singleton.url = ""
+        URL.singleton.saveURL()
         self.updateHideState()
     }
     
@@ -90,14 +83,14 @@ class SetupController: UIViewController, UITextFieldDelegate {
             ws.send("{\"type\": \"use_token\", \"token\": \"\(token)\"}")
         }
         ws.event.message = { message in
-            self.url.url = String(message)
-            self.url.saveURL()
+            URL.singleton.url = String(message)
+            URL.singleton.saveURL()
             self.updateHideState()
             ws.close()
         }
         ws.event.error = { err in
-            self.url.url = ""
-            self.url.saveURL()
+            URL.singleton.url = ""
+            URL.singleton.saveURL()
             ws.close()
         }
         // Production settings
@@ -110,17 +103,18 @@ class SetupController: UIViewController, UITextFieldDelegate {
     
     func updateHideState() {
         // Show the token view if no URL is set
-        if let url = self.url.url {
-            if url == "" {
-                self.tokenView.hidden = false
-                self.logInView.hidden = true
+        if let url = URL.singleton.url {
+            if url != "" {
+                // Show the run button
+                self.tokenView.hidden = true
+                self.logInView.hidden = false
                 return
             }
         }
         
-        // Otherwise, show the run button
-        self.tokenView.hidden = true
-        self.logInView.hidden = false
+        // Otherwise, request a token
+        self.tokenView.hidden = false
+        self.logInView.hidden = true
     }
 }
 

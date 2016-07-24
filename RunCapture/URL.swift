@@ -9,6 +9,9 @@
 import Foundation
 
 class URL {
+    
+    static var singleton = URL()
+    
     var url: String? // The URL to post runs to
     
     init() {

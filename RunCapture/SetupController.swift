@@ -96,11 +96,11 @@ class SetupController: UIViewController, UITextFieldDelegate {
             ws.close()
         }
         // Production settings
-        //ws.allowSelfSignedSSL = true
-        //ws.open("wss://api-generator2.herokuapp.com/ws")
+        ws.allowSelfSignedSSL = true
+        ws.open("wss://api-generator2.herokuapp.com/ws")
         
         // Test settings
-        ws.open("ws://127.0.0.1:5000/ws")
+        //ws.open("ws://127.0.0.1:5000/ws")
     }
     
     func updateHideState() {

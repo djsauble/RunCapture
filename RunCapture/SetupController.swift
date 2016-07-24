@@ -85,8 +85,10 @@ class SetupController: UIViewController, UITextFieldDelegate {
         ws.event.message = { message in
             URL.singleton.url = String(message)
             URL.singleton.saveURL()
-            self.updateHideState()
             ws.close()
+        }
+        ws.event.close = { code, reason, clean in
+            self.updateHideState()
         }
         ws.event.error = { err in
             URL.singleton.url = ""
@@ -94,11 +96,11 @@ class SetupController: UIViewController, UITextFieldDelegate {
             ws.close()
         }
         // Production settings
-        ws.allowSelfSignedSSL = true
-        ws.open("wss://api-generator2.herokuapp.com/ws")
+        //ws.allowSelfSignedSSL = true
+        //ws.open("wss://api-generator2.herokuapp.com/ws")
         
         // Test settings
-        //ws.open("ws://127.0.0.1:5000/ws")
+        ws.open("ws://127.0.0.1:5000/ws")
     }
     
     func updateHideState() {
@@ -112,9 +114,14 @@ class SetupController: UIViewController, UITextFieldDelegate {
             }
         }
         
-        // Otherwise, request a token
+        // Otherwise, request a token (clear the text fields and put focus in the first one)
+        self.tokenFieldOne.text = ""
+        self.tokenFieldTwo.text = ""
+        self.tokenFieldThree.text = ""
+        self.tokenFieldFour.text = ""
         self.tokenView.hidden = false
         self.logInView.hidden = true
+        self.tokenFieldOne.becomeFirstResponder()
     }
 }
 

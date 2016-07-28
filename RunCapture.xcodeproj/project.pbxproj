@@ -20,6 +20,7 @@
 		FB438ECD1C83D075009FA67E /* RunCaptureUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438ECC1C83D075009FA67E /* RunCaptureUITests.swift */; };
 		FB438EDB1C83DAB2009FA67E /* CaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB438EDA1C83DAB2009FA67E /* CaptureController.swift */; };
 		FB7C1AE51C8556C700CA8CEB /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7C1AE41C8556C700CA8CEB /* URL.swift */; };
+		FB9E44D31D49BD8700245C75 /* Goal.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E44D21D49BD8700245C75 /* Goal.swift */; };
 		FBF9AF871D442B9F00734B1A /* FileList.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF9AF861D442B9F00734B1A /* FileList.swift */; };
 		FC502F508B2207D8C7F6155E /* Pods_RunCaptureUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1832DAC10F64F7474567FD5B /* Pods_RunCaptureUITests.framework */; };
 /* End PBXBuildFile section */
@@ -67,6 +68,7 @@
 		FB438ECE1C83D075009FA67E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB438EDA1C83DAB2009FA67E /* CaptureController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureController.swift; sourceTree = "<group>"; };
 		FB7C1AE41C8556C700CA8CEB /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
+		FB9E44D21D49BD8700245C75 /* Goal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Goal.swift; sourceTree = "<group>"; };
 		FBF9AF861D442B9F00734B1A /* FileList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileList.swift; sourceTree = "<group>"; };
 		FFEDBCAAED2AC6E4A3D0AA4E /* Pods-RunCaptureUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunCaptureUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RunCaptureUITests/Pods-RunCaptureUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -155,6 +157,7 @@
 				FB438EB81C83D075009FA67E /* Info.plist */,
 				FB438EDA1C83DAB2009FA67E /* CaptureController.swift */,
 				FB7C1AE41C8556C700CA8CEB /* URL.swift */,
+				FB9E44D21D49BD8700245C75 /* Goal.swift */,
 				FB1A69F41C87C26000E374BA /* Location.swift */,
 				FB3407FD1C8A9EF7009614C2 /* RouteUpload.swift */,
 				FBF9AF861D442B9F00734B1A /* FileList.swift */,
@@ -443,6 +446,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB9E44D31D49BD8700245C75 /* Goal.swift in Sources */,
 				FB3407FE1C8A9EF7009614C2 /* RouteUpload.swift in Sources */,
 				FB438EDB1C83DAB2009FA67E /* CaptureController.swift in Sources */,
 				FB438EAF1C83D075009FA67E /* SetupController.swift in Sources */,

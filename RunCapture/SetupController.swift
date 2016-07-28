@@ -28,7 +28,7 @@ class SetupController: UIViewController, UITextFieldDelegate {
         // Listen for notifications
         let notificationCenter = NSNotificationCenter.defaultCenter()
         let mainQueue = NSOperationQueue.mainQueue()
-        let observer = notificationCenter.addObserverForName(UITextFieldTextDidChangeNotification, object: nil, queue: mainQueue) { notification in
+        let _ = notificationCenter.addObserverForName(UITextFieldTextDidChangeNotification, object: nil, queue: mainQueue) { notification in
             if let textField = notification.object as! UITextField! {
                 if textField == self.tokenFieldOne {
                     self.tokenFieldTwo.becomeFirstResponder()
@@ -67,13 +67,49 @@ class SetupController: UIViewController, UITextFieldDelegate {
         if segue.identifier == "toCapture" {
             // Reset the capture data
             Location.singleton.resetCapture()
+            
+            // Fetch goal data from the server
+            self.fetchGoal()
         }
     }
     
     @IBAction func logOut(sender: AnyObject) {
-        URL.singleton.url = ""
+        URL.singleton.url = nil
         URL.singleton.saveURL()
         self.updateHideState()
+    }
+    
+    func fetchGoal() {
+        if let user = URL.singleton.user() {
+            if let token = URL.singleton.token() {
+                let ws = WebSocket()
+                ws.event.open = {
+                    ws.send("{\"type\": \"get_weekly_goal\", \"user\": \"\(user)\", \"token\": \"\(token)\"}")
+                }
+                ws.event.message = { message in
+                    let data = String(message).dataUsingEncoding(NSUTF8StringEncoding)
+                    do {
+                        let object = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
+                        Goal.singleton.distanceThisWeek = object["distanceThisWeek"] as? Double
+                        Goal.singleton.goalThisWeek = object["goalThisWeek"] as? Double
+                    }
+                    catch {
+                        // Recover
+                    }
+                    ws.close()
+                }
+                ws.event.close = { code, reason, clean in
+                }
+                ws.event.error = { err in
+                    print("Error fetching goal data from server")
+                    ws.close()
+                }
+                if (URL.ws.hasPrefix("wss")) {
+                    ws.allowSelfSignedSSL = true
+                }
+                ws.open(URL.ws)
+            }
+        }
     }
     
     func fetchURL() {
@@ -83,7 +119,7 @@ class SetupController: UIViewController, UITextFieldDelegate {
             ws.send("{\"type\": \"use_token\", \"token\": \"\(token)\"}")
         }
         ws.event.message = { message in
-            URL.singleton.url = String(message)
+            URL.singleton.url = NSURL(string: String(message))
             URL.singleton.saveURL()
             ws.close()
         }
@@ -91,16 +127,14 @@ class SetupController: UIViewController, UITextFieldDelegate {
             self.updateHideState()
         }
         ws.event.error = { err in
-            URL.singleton.url = ""
+            URL.singleton.url = nil
             URL.singleton.saveURL()
             ws.close()
         }
-        // Production settings
-        ws.allowSelfSignedSSL = true
-        ws.open("wss://api-generator2.herokuapp.com/ws")
-        
-        // Test settings
-        //ws.open("ws://127.0.0.1:5000/ws")
+        if (URL.ws.hasPrefix("wss")) {
+            ws.allowSelfSignedSSL = true
+        }
+        ws.open(URL.ws)
     }
     
     func updateHideState() {

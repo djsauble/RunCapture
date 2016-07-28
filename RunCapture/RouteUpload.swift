@@ -87,7 +87,7 @@ class RouteUpload: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
     func upload(file: String) {
         if let url = URL.singleton.url {
             // Configure HTTP request
-            let request = NSMutableURLRequest(URL: NSURL(string: url)!)
+            let request = NSMutableURLRequest(URL: url)
             request.HTTPMethod = "PUT"
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             

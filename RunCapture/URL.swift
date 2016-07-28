@@ -13,10 +13,10 @@ class URL {
     static var singleton = URL()
     
     // Production
-    //static var ws = "wss://api-generator2.herokuapp.com/ws"
+    static var ws = "wss://api-generator2.herokuapp.com/ws"
     
     // Local
-    static var ws = "ws://127.0.0.1:5000/ws"
+    //static var ws = "ws://127.0.0.1:5000/ws"
 
     var url: NSURL? // The URL to post runs to
     

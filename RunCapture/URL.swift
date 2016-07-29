@@ -21,7 +21,12 @@ class URL {
     var url: NSURL? // The URL to post runs to
     
     init() {
-        url = NSURL(string: (NSKeyedUnarchiver.unarchiveObjectWithFile(URL.ArchiveURL.path!) as? String)!)
+        if let u = NSKeyedUnarchiver.unarchiveObjectWithFile(URL.ArchiveURL.path!) {
+            url = NSURL(string: (u as? String)!)
+        }
+        else {
+            url = nil
+        }
     }
     
     func saveURL() {

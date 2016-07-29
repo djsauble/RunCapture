@@ -11,11 +11,10 @@ import CoreLocation
 
 class CaptureController: UIViewController {
     
-    @IBOutlet weak var weekGoalLabel: UILabel!
-    @IBOutlet weak var weekDistanceLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var remainingLabel: UILabel!
-    @IBOutlet weak var remainingTextLabel: UILabel!
+    
+    var currentDistance: Double = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,45 +22,38 @@ class CaptureController: UIViewController {
         // Set the callback for the location manager and start capturing data
         Location.singleton.callback = self.showProgress
         Location.singleton.startCapture()
+        
+        self.showProgress(0)
     }
     
     func showProgress(distance: Double) {
         
-        let miles = floor((distance / 1609.344) * 10.0) / 10.0
+        self.currentDistance = floor((distance / 1609.344) * 10.0) / 10.0
         var remaining: Double? = nil
         
         // Goal for the week
         if let goal = Goal.singleton.goalThisWeek {
-            weekGoalLabel.text = "\(goal) mi"
             remaining = goal
-        }
-        else {
-            weekGoalLabel.text = "— mi"
         }
         
         // Distance traversed this week
         if let d = Goal.singleton.distanceThisWeek {
-            weekDistanceLabel.text = "\(d) mi"
             if let r = remaining {
                 remaining = r - d
             }
         }
-        else {
-            weekDistanceLabel.text = "— mi"
-        }
         
         // Distance traversed this run
-        distanceLabel.text = "\(miles) mi"
+        distanceLabel.text = "\(self.currentDistance) mi"
         
         // Remaining distance this week
         if let r = remaining {
-            if r <= 0 {
-                remainingLabel.text = "0 mi"
+            if r - self.currentDistance <= 0 {
+                remainingLabel.text = "0 mi remaining"
                 remainingLabel.textColor = UIColor.greenColor()
-                remainingTextLabel.textColor = UIColor.greenColor()
             }
             else {
-                remainingLabel.text = "\(r - miles) mi"
+                remainingLabel.text = "\(floor((r - self.currentDistance) * 10.0) / 10.0) mi remaining"
             }
         }
         else {
@@ -72,6 +64,15 @@ class CaptureController: UIViewController {
     @IBAction func endRun(sender: AnyObject) {
         Location.singleton.stopCapture()
         Location.singleton.submitData()
+        
+        // Save the data
+        if let d = Goal.singleton.distanceThisWeek {
+            Goal.singleton.distanceThisWeek = d + self.currentDistance
+        }
+        else {
+            Goal.singleton.distanceThisWeek = self.currentDistance
+        }
+        Goal.singleton.save()
         
         navigationController?.popToRootViewControllerAnimated(true)
     }

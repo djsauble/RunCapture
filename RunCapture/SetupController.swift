@@ -11,7 +11,6 @@ import SwiftWebSocket
 
 class SetupController: UIViewController, UITextFieldDelegate {
     
-    @IBOutlet weak var logInView: UIView!
     
     @IBOutlet weak var tokenView: UIView!
     @IBOutlet weak var tokenFieldOne: UITextField!
@@ -19,9 +18,15 @@ class SetupController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var tokenFieldThree: UITextField!
     @IBOutlet weak var tokenFieldFour: UITextField!
     
+    @IBOutlet weak var logInView: UIView!
+    @IBOutlet weak var weeklyGoalValue: UILabel!
+    @IBOutlet weak var weeklyProgressValue: UILabel!
+    @IBOutlet weak var weeklyRemainingValue: UILabel!
+    @IBOutlet weak var weeklyRemainingLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Do we have a URL?
         updateHideState()
         
@@ -56,6 +61,18 @@ class SetupController: UIViewController, UITextFieldDelegate {
         
         // Reset any capture data, get ready for the next run
         Location.singleton.resetCapture()
+        
+        // Fetch goals on page load
+        self.fetchGoal()
+        
+        // Display goal data
+        self.updateGoals()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        if animated {
+            self.updateGoals()
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -92,6 +109,10 @@ class SetupController: UIViewController, UITextFieldDelegate {
                         let object = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
                         Goal.singleton.distanceThisWeek = object["distanceThisWeek"] as? Double
                         Goal.singleton.goalThisWeek = object["goalThisWeek"] as? Double
+                        Goal.singleton.save()
+                        
+                        // Display goal data
+                        self.updateGoals()
                     }
                     catch {
                         // Recover
@@ -122,6 +143,9 @@ class SetupController: UIViewController, UITextFieldDelegate {
             URL.singleton.url = NSURL(string: String(message))
             URL.singleton.saveURL()
             ws.close()
+            
+            // Fetch goal data from the server
+            self.fetchGoal()
         }
         ws.event.close = { code, reason, clean in
             self.updateHideState()
@@ -135,6 +159,45 @@ class SetupController: UIViewController, UITextFieldDelegate {
             ws.allowSelfSignedSSL = true
         }
         ws.open(URL.ws)
+    }
+    
+    func updateGoals() {
+        var remaining: Double? = nil
+        
+        // Goal for the week
+        if let goal = Goal.singleton.goalThisWeek {
+            weeklyGoalValue.text = "\(floor(goal * 10.0) / 10.0) mi"
+            remaining = goal
+        }
+        else {
+            weeklyGoalValue.text = "— mi"
+        }
+        
+        // Distance traversed this week
+        if let d = Goal.singleton.distanceThisWeek {
+            weeklyProgressValue.text = "- \(floor(d * 10.0) / 10.0) mi"
+            if let r = remaining {
+                remaining = r - d
+            }
+        }
+        else {
+            weeklyProgressValue.text = "— mi"
+        }
+        
+        // Remaining distance this week
+        if let r = remaining {
+            if r <= 0 {
+                weeklyRemainingValue.text = "0 mi"
+                weeklyRemainingValue.textColor = UIColor.greenColor()
+                weeklyRemainingLabel.textColor = UIColor.greenColor()
+            }
+            else {
+                weeklyRemainingValue.text = "\(floor(r * 10.0) / 10.0) mi"
+            }
+        }
+        else {
+            weeklyRemainingValue.text = "— mi"
+        }
     }
     
     func updateHideState() {

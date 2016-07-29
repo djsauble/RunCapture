@@ -16,11 +16,11 @@ class Goal {
     var goalThisWeek: Double? // How far are we aspiring to run this week?
     
     init() {
-        //distanceThisWeek = NSKeyedUnarchiver.unarchiveObjectWithFile(Goal.DistanceArchiveURL.path!) as? Double
-        //goalThisWeek = NSKeyedUnarchiver.unarchiveObjectWithFile(Goal.GoalArchiveURL.path!) as? Double
+        distanceThisWeek = NSKeyedUnarchiver.unarchiveObjectWithFile(Goal.DistanceArchiveURL.path!) as? Double
+        goalThisWeek = NSKeyedUnarchiver.unarchiveObjectWithFile(Goal.GoalArchiveURL.path!) as? Double
     }
     
-    /*func save() {
+    func save() {
         if let distance = self.distanceThisWeek {
             let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(distance, toFile: Goal.DistanceArchiveURL.path!)
             
@@ -36,11 +36,11 @@ class Goal {
                 print("Failed to save goal this week")
             }
         }
-    }*/
+    }
     
     // MARK: Archiving Paths
     
-    /*static let DocumentsDirectory = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
+    static let DocumentsDirectory = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
     static let DistanceArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("distanceThisWeek")
-    static let GoalArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("goalThisWeek")*/
+    static let GoalArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("goalThisWeek")
 }

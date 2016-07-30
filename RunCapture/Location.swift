@@ -32,6 +32,8 @@ class Location: NSObject, CLLocationManagerDelegate {
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.distanceFilter = kCLLocationAccuracyBest
         self.locationManager.allowsBackgroundLocationUpdates = true
+        self.locationManager.activityType = CLActivityType.Fitness
+        //self.locationManager.pausesLocationUpdatesAutomatically = false
         
         // Check authorization. Request location services.
         if CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedAlways {
@@ -90,6 +92,11 @@ class Location: NSObject, CLLocationManagerDelegate {
             self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: CLTimeIntervalMax)
             self.deferringUpdates = true
         }
+    }
+    
+    // Turn off the deferringUpdates flag
+    @objc func locationManager(manager: CLLocationManager, didFinishDeferredUpdatesWithError error: NSError?) {
+        self.deferringUpdates = false
     }
     
     // Calculate additional distance traveled

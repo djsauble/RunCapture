@@ -91,24 +91,23 @@ class SetupController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func logOut(sender: AnyObject) {
-        URL.singleton.url = nil
-        URL.singleton.saveURL()
+        URL.singleton.reset()
         self.updateHideState()
     }
     
     func fetchGoal() {
-        if let user = URL.singleton.user() {
-            if let token = URL.singleton.token() {
+        if let user = URL.singleton.user {
+            if let token = URL.singleton.token {
                 let ws = WebSocket()
                 ws.event.open = {
-                    ws.send("{\"type\": \"get_weekly_goal\", \"user\": \"\(user)\", \"token\": \"\(token)\"}")
+                    ws.send("{\"type\": \"weekly_goal:get\", \"data\": {\"user\": \"\(user)\", \"token\": \"\(token)\"} }")
                 }
                 ws.event.message = { message in
                     let data = String(message).dataUsingEncoding(NSUTF8StringEncoding)
                     do {
                         let object = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
-                        Goal.singleton.distanceThisWeek = object["distanceThisWeek"] as? Double
-                        Goal.singleton.goalThisWeek = object["goalThisWeek"] as? Double
+                        Goal.singleton.distanceThisWeek = object["data"]!!["distanceThisWeek"] as? Double
+                        Goal.singleton.goalThisWeek = object["data"]!!["goalThisWeek"] as? Double
                         Goal.singleton.save()
                         
                         // Display goal data
@@ -137,11 +136,19 @@ class SetupController: UIViewController, UITextFieldDelegate {
         let token = "\(self.tokenFieldOne.text!)\(self.tokenFieldTwo.text!)\(self.tokenFieldThree.text!)\(self.tokenFieldFour.text!)"
         let ws = WebSocket()
         ws.event.open = {
-            ws.send("{\"type\": \"use_token\", \"token\": \"\(token)\"}")
+            ws.send("{\"type\": \"passcode:use\", \"data\": {\"passcode\": \"\(token)\"} }")
         }
         ws.event.message = { message in
-            URL.singleton.url = NSURL(string: String(message))
-            URL.singleton.saveURL()
+            let data = String(message).dataUsingEncoding(NSUTF8StringEncoding)
+            do {
+                let object = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
+                URL.singleton.user = object["data"]!!["user"] as? String
+                URL.singleton.token = object["data"]!!["token"] as? String
+                URL.singleton.save()
+            }
+            catch {
+                // Recover
+            }
             ws.close()
             
             // Fetch goal data from the server
@@ -151,8 +158,7 @@ class SetupController: UIViewController, UITextFieldDelegate {
             self.updateHideState()
         }
         ws.event.error = { err in
-            URL.singleton.url = nil
-            URL.singleton.saveURL()
+            URL.singleton.reset()
             ws.close()
         }
         if (URL.ws.hasPrefix("wss")) {
@@ -202,13 +208,11 @@ class SetupController: UIViewController, UITextFieldDelegate {
     
     func updateHideState() {
         // Show the token view if no URL is set
-        if let url = URL.singleton.url {
-            if url != "" {
-                // Show the run button
-                self.tokenView.hidden = true
-                self.logInView.hidden = false
-                return
-            }
+        if URL.singleton.url() !== nil {
+            // Show the run button
+            self.tokenView.hidden = true
+            self.logInView.hidden = false
+            return
         }
         
         // Otherwise, request a token (clear the text fields and put focus in the first one)

@@ -85,7 +85,7 @@ class RouteUpload: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
     
     // Upload a file that is stored on disk
     func upload(file: String) {
-        if let url = URL.singleton.url {
+        if let url = URL.singleton.url() {
             // Configure HTTP request
             let request = NSMutableURLRequest(URL: url)
             request.HTTPMethod = "PUT"
